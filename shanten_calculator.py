@@ -1,3 +1,5 @@
+'''calculateMinimumShanten is a function to calculate the minimum of shanten for given hand.'''
+
 global completeSets
 global pair
 global partialSets

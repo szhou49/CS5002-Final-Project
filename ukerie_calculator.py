@@ -58,4 +58,4 @@ for i in range(1, len(a)):
     # print(i, a[i])
     result_dict[i] = a[i]
 
-print(result_dict)
+# print(result_dict)

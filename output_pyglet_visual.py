@@ -2,7 +2,7 @@
 display the result using tkinter
 """
 
-from configuration import value_tiles_dic
+from configuration import value_tiles_dic, minimun_shanten
 import pyglet
 
 # global
@@ -40,11 +40,13 @@ text_label_3 = pyglet.text.Label(
     anchor_x="left", anchor_y="baseline"
 )
 
-tiles_name_dict = {1:"1 Man", 2:"2 Man", 3:"3 Man", 4:"4 Man", 5:"5 Man", 6:"6 Man", 7:"7 Man", 8:"8 Man", 9:"9 Man", 
-            11:"1 So", 12:"2 So",13:"3 So",14:"4 So",15:"5 So",16:"6 So",17:"7 So",18:"8 So", 19:"9 So", 
-            21:"1 Pin", 22:"2 Pin", 23:"3 Pin", 24:"4 Pin", 25:"5 Pin", 26:"6 Pin", 27:"7 Pin", 28:"8 Pin", 29:"9 Pin", 
-            31:"Ton", 32:"Nan", 33:"Sha", 34:"Pei", 35:"Chun", 36:"Haku", 37:"Hatsu"}
-
+text_label_4 = pyglet.text.Label(
+    "Minimum Shanten:",
+    font_name="Times New Roman",
+    font_size=18,
+    x=window.width//2, y=500,
+    anchor_x="left", anchor_y="baseline"
+)
 
 # find the max value from dict
 max_value = 0
@@ -61,11 +63,19 @@ for i in range(1, len(result_dict)):
         keys_with_max_value.append(i)
         tiles.append(result_dict[i]["tiles"])
 
-text_label_4 = pyglet.text.Label(
+text_label_5 = pyglet.text.Label(
     f"{max_value}",
     font_name="Times New Roman",
     font_size=18,
     x=400, y=500,
+    anchor_x="left", anchor_y="baseline"
+)
+
+text_label_6 = pyglet.text.Label(
+    f"{minimun_shanten}",
+    font_name="Times New Roman",
+    font_size=18,
+    x=window.width//2 + 250, y=500,
     anchor_x="left", anchor_y="baseline"
 )
 
@@ -99,19 +109,6 @@ def display_tile():
             tile_sprite = pyglet.sprite.Sprite(img = tile_img, x = tile_x, y = tile_y, batch = batch)
             img_list.append(tile_sprite)
 
-
-
-@window.event
-def on_draw():
-    window.clear()
-    bg_sprite.draw()
-    text_label.draw()
-    text_label_2.draw()
-    text_label_3.draw()
-    text_label_4.draw()
-    for sprite in img_list:
-        sprite.draw()
-    
 def main():
     @window.event
     def on_draw():
@@ -121,6 +118,8 @@ def main():
         text_label_2.draw()
         text_label_3.draw()
         text_label_4.draw()
+        text_label_5.draw()
+        text_label_6.draw()
         for sprite in img_list:
             sprite.draw()
 

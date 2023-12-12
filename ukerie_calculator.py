@@ -40,3 +40,4 @@ def calculateDiscardUkeire(hand, remainingTiles, baseShanten = -2):
             results[i] = ukeire
     
     return results
+

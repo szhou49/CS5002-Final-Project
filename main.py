@@ -1,7 +1,7 @@
 import input_validation
 import shanten_calculator
 import ukerie_calculator
-
+import output_visuals
 
 
 hand_to_check = input_validation.hand_to_check
@@ -23,12 +23,12 @@ remainingTiles = [x - y - w for x, y, w in zip(all_tiles, hand_to_check, tiles_o
 value_tiles_dic = ukerie_calculator.calculateDiscardUkeire(hand_to_check, remainingTiles)
 
 # print the dictionary out
-# for i in range(1, len(value_tiles_dic)):
-#     print(i, value_tiles_dic[i])
+for i in range(1, len(value_tiles_dic)):
+    print(i, value_tiles_dic[i])
 
 
 
 # shanten calculation result
 minimun_shanten = shanten_calculator.calculateMinimumShanten(hand_to_check)
 
-
+output_visuals.get_values(value_tiles_dic)

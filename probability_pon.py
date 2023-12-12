@@ -24,6 +24,6 @@ def get_remaining_pair_tile():
 
 def odd_pon():
     odd_chow = sum(remaining_pair_tile_number) / sum(configuration.remainingTiles)
-    formatted_percentage = "{:.10f}%".format(odd_chow*100)
-    return formatted_percentage
+
+    return odd_chow
 

@@ -25,6 +25,6 @@ def get_remaining_kong_tile():
 
 def odd_kong():
     odd_kong = sum(remaining_kong_tile_number) / sum(configuration.remainingTiles)
-    formatted_percentage = "{:.10f}%".format(odd_kong*100)
-    return formatted_percentage
+    
+    return odd_kong
 

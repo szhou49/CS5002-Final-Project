@@ -3,6 +3,7 @@ import output_visuals
 import output_pyglet_visual
 import configuration
 import pyglet
+import pie
 
 
 hand_to_check = configuration.hand_to_check
@@ -33,5 +34,6 @@ for i in range(1, len(value_tiles_dic)):
 minimun_shanten = configuration.minimun_shanten
 
 output_visuals.get_values(value_tiles_dic)
+pie.show_result(configuration.odd_pon, configuration.odd_kong)
 output_pyglet_visual.window.set_visible(True)
 output_pyglet_visual.main()

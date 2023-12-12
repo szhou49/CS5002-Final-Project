@@ -4,20 +4,18 @@ display the result using tkinter
 
 from ukerie_calculator import result_dict
 import pyglet
-from pyglet import image
 
 # global
 window = pyglet.window.Window(resizable=True)
 print("window.width ",window.width)
 print("window.height ",window.height)
-# bgfiller = pyglet.shapes.Rectangle()
 bgimage_path = "tileImages/mahjongbg.jpg"
 bgimage = pyglet.image.load(bgimage_path)
 bg_sprite = pyglet.sprite.Sprite(bgimage)
 batch = pyglet.graphics.Batch()
 imageWidth = 35
 imageHeight = 55
-
+img_list = []
 
 text_label = pyglet.text.Label(
     "Tiles to discard:",
@@ -31,7 +29,7 @@ text_label_2 = pyglet.text.Label(
     "Effective Tiles to get:",
     font_name="Times New Roman",
     font_size=18,
-    x=50, y=300,
+    x=window.width//2, y=450,
     anchor_x="left", anchor_y="baseline"
 )
 
@@ -69,37 +67,37 @@ for key, val in result_dict.items():
     if val["value"] == max_value:
         keys_with_max_value.append(key)
 
-xd = 20
-yd = 350
-img_list = []
+
+
 def display_max_val_tile_img():
     """ display the discard tiles """
     for idx, key in enumerate(keys_with_max_value):
         img = pyglet.resource.image(f"tileImages/{key}.png")
         img.width = imageWidth # resize the image
         img.height = imageHeight
-        sprite = pyglet.sprite.Sprite(img = img, x =window.width//3+idx*img.width, y = yd, batch = batch)
+        img_x = window.width//10 + img.width
+        img_y = window.height//2 - idx * img.height
+        sprite = pyglet.sprite.Sprite(img = img, x = img_x, y = img_y, batch = batch)
         img_list.append(sprite)
 
 
 def display_tile():
     """display effective tiles' image """
-    # tile_dict = {}?
+    # tile_dict = {}
     tile_img_list = []
     for i in range(len(keys_with_max_value)):
-        # tile_dict[keys_with_max_value[i]] = result_dict[keys_with_max_value[i]]["tiles"]
         tile_img_list.append(result_dict[keys_with_max_value[i]]["tiles"])
-    # print("tile Dict: ",tile_dict)
-    # print("tile img list", tile_img_list)
-    
+
     for i in range(len(tile_img_list)):
         for idx, num in enumerate(tile_img_list[i]):
             tile_img = pyglet.resource.image(f"tileImages/{num}.png")
             tile_img.width = imageWidth
             tile_img.height = imageHeight
-            tile_sprite = pyglet.sprite.Sprite(img = tile_img, x = tile_img.width + (idx * tile_img.width), y= window.height//5 + i *tile_img.height, batch=batch)
-            print(idx)
-            print(f"X = {tile_sprite.x}, Y = {tile_sprite.y} ")
+            tile_x = window.width//2 + idx * tile_img.width
+            tile_y = window.height//2 - i * tile_img.height
+            print("X", tile_x)
+            print("Y", tile_y)
+            tile_sprite = pyglet.sprite.Sprite(img = tile_img, x = tile_x, y = tile_y, batch = batch)
             img_list.append(tile_sprite)
 
 

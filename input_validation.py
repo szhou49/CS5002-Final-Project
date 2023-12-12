@@ -196,7 +196,7 @@ def on_start():
                 if wind < 0 or wind > 4:
                     raise ValueError
             global dragon_list
-            dragon_list = [red, green, white]
+            dragon_list = [red, white, green]
             # print(dragon_list)
             app.root.destroy()
         except ValueError:

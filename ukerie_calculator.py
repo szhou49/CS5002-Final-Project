@@ -41,21 +41,3 @@ def calculateDiscardUkeire(hand, remainingTiles, baseShanten = -2):
     
     return results
 
-
-
-a = calculateDiscardUkeire([0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 
-                                0, 1, 0, 2, 1, 1, 0, 1, 0, 2,
-                                0, 0, 0, 0, 0, 0, 0, 2, 0, 2,
-                                0, 0, 0, 0, 0, 0, 0, 0], 
-                                [0, 4, 4, 4, 3, 3, 4, 4, 4, 4, 
-                                0, 3, 4, 2, 3, 3, 4, 3, 4, 2,
-                                0, 4, 4, 4, 4, 4, 4, 2, 4, 2,
-                                0, 4, 4, 4, 4, 4, 4, 4])
-# print("print from Ukerie")
-
-result_dict = {}
-for i in range(1, len(a)):
-    # print(i, a[i])
-    result_dict[i] = a[i]
-
-# print(result_dict)

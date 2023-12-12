@@ -9,11 +9,16 @@ so_saved = False
 pin_saved = False
 wind_saved = False
 dragon_saved = False
+three_players_selected = False
+four_players_selected = False    
+run_after_closing = True
+is_checked = False
 man_list = None
 so_list = None
 pin_list = None
 wind_list = None
 dragon_list = None
+
 
 
 def number_or_none(input_str):
@@ -29,38 +34,57 @@ def number_or_none(input_str):
 
 
 def input_so():
-    global man_saved
+    global man_saved, three_players_selected, four_players_selected, man_list
     man_saved = True
+    if three_players_selected:
+        man1 = number_or_none(app.man1_string.get())
+        man9 = number_or_none(app.man9_string.get())
+        
+        if ( man1 is not None and man9 is not None):
+            try:
+                temp = [man1, man9]
+                for man in temp:
+                    if man < 0 or man > 4:
+                        raise ValueError
 
-    man1 = number_or_none(app.man1_string.get())
-    man2 = number_or_none(app.man2_string.get())
-    man3 = number_or_none(app.man3_string.get())
-    man4 = number_or_none(app.man4_string.get())
-    man5 = number_or_none(app.man5_string.get())
-    man6 = number_or_none(app.man6_string.get())
-    man7 = number_or_none(app.man7_string.get())
-    man8 = number_or_none(app.man8_string.get()) 
-    man9 = number_or_none(app.man9_string.get())
+                man_list = [0, man1, 0, 0, 0, 0, 0, 0, 0, man9]
+                # print(man_list)
+                app.root.destroy()
+            except ValueError:
+                tkbox.showerror("Too Big or Too Small",
+                                "0 <= man number <= 4")
+        else:
+            return
+    if four_players_selected:
+        man1 = number_or_none(app.man1_string.get())
+        man9 = number_or_none(app.man9_string.get())
+        man2 = number_or_none(app.man2_string.get())
+        man3 = number_or_none(app.man3_string.get())
+        man4 = number_or_none(app.man4_string.get())
+        man5 = number_or_none(app.man5_string.get())
+        man6 = number_or_none(app.man6_string.get())
+        man7 = number_or_none(app.man7_string.get())
+        man8 = number_or_none(app.man8_string.get()) 
 
-    if ( man1 is not None and man2 is not None and man3 is not None and man4 is not None
-    and man5 is not None
-    and man6 is not None and man7 is not None
-    and man8 is not None and man9 is not None):
-        try:
-            temp = [man1, man2, man3, man4, man5, man6, man7, man8, man9]
-            for man in temp:
-                if man < 0 or man > 4:
-                    raise ValueError
+        if ( man1 is not None and man2 is not None and man3 is not None and man4 is not None
+        and man5 is not None
+        and man6 is not None and man7 is not None
+        and man8 is not None and man9 is not None):
+            try:
+                temp = [man1, man2, man3, man4, man5, man6, man7, man8, man9]
+                for man in temp:
+                    if man < 0 or man > 4:
+                        raise ValueError
 
-            global man_list
-            man_list = [0, man1, man2, man3, man4, man5, man6, man7, man8, man9]
-            print(man_list)
-            app.root.destroy()
-        except ValueError:
-            tkbox.showerror("Too Big or Too Small",
-                            "0 <= man number <= 4")
-    else:
-        return
+
+                man_list = [0, man1, man2, man3, man4, man5, man6, man7, man8, man9]
+                # print(man_list)
+                app.root.destroy()
+            except ValueError:
+                tkbox.showerror("Too Big or Too Small",
+                                "0 <= man number <= 4")
+        else:
+            return
 
 
 def input_pin():
@@ -89,7 +113,7 @@ def input_pin():
             
             global so_list
             so_list = [0, so1, so2, so3, so4, so5, so6, so7, so8, so9]
-            print(so_list)
+            # print(so_list)
             app.root.destroy()
         except ValueError:
             tkbox.showerror("Too Big or Too Small",
@@ -124,7 +148,7 @@ def input_windtiles():
                     raise ValueError
             global pin_list
             pin_list = [0, pin1, pin2, pin3, pin4, pin5, pin6, pin7, pin8, pin9]
-            print(pin_list)
+            # print(pin_list)
             app.root.destroy()
         except ValueError:
             tkbox.showerror("Too Big or Too Small",
@@ -150,7 +174,7 @@ def input_Dragontiles():
                     raise ValueError
             global wind_list
             wind_list = [0, east, south, west, north]
-            print(wind_list)
+            # print(wind_list)
             app.root.destroy()
         except ValueError:
                     tkbox.showerror("Too Big or Too Small",
@@ -172,8 +196,8 @@ def on_start():
                 if wind < 0 or wind > 4:
                     raise ValueError
             global dragon_list
-            dragon_list = [red, green, white]
-            print(dragon_list)
+            dragon_list = [red, white, green]
+            # print(dragon_list)
             app.root.destroy()
         except ValueError:
             tkbox.showerror("Too Big or Too Small",
@@ -182,289 +206,595 @@ def on_start():
         return
 
 
+
+
+# RADIO BUTTONS FUNCTIONS
+def view_selection():
+    """ Check which button was selected, print that message.
+    Also set the value of global variable to True or False.
+    """
+    global is_checked, three_players_selected, four_players_selected
+
+    if app.var.get() == 1:
+        is_checked = True
+        three_players_selected = True
+        four_players_selected = False
+
+
+    elif app.var.get() == 2:
+        is_checked = True
+        three_players_selected = False
+        four_players_selected = True
+
+    else:
+        is_checked = False
+
+
+def clear():
+    """ If any radio button has been selected,
+    the window of radio buttons will be destroyed.
+    """
+    global is_checked
+    if is_checked:
+        app.root.after(1000, app.root.destroy)
+    else:
+        return
+    
+
+def on_closing():
+    exit()
+
+
+
 class App:
     def run_hand_to_check(self):
         """
         Runs the input window.
         """
-
         self.root = tk.Tk()
-        self.root.title("Mahjong Assisting Program")
-        my_frame = ttk.Frame(self.root, padding=50)
-        my_frame.grid()
+        self.root.title("Mahjong Assisting Program - Mode Selection")
+        self.root.geometry("400x100")
 
-        ttk.Label(my_frame, text="How many Mans in hand?").grid(row=0, column=0)
+        self.var = tk.IntVar()
 
-        ttk.Label(my_frame, text="1 Man:").grid(row=1, column=0)
-        self.man1_string = tk.StringVar()
-        ttk.Entry(my_frame,
-                  textvariable=self.man1_string).grid(row=1,
-                                                                 column=1)
+        tk.Radiobutton(self.root, text="Three Players Mode", variable=self.var,
+                        value=1, command=view_selection).pack(side="top",
+                                                                ipady=3)
+        tk.Radiobutton(self.root, text="Four Players Mode", variable=self.var,
+                        value=2, command=view_selection).pack(side="top",
+                                                                ipady=3)
 
-        ttk.Label(my_frame, text="2 Man:").grid(row=2, column=0)
-        self.man2_string = tk.StringVar()
-        ttk.Entry(my_frame,
-                  textvariable=self.man2_string).grid(row=2,
-                                                                column=1)
+        button = tk.Button(self.root, text='Start', command=clear)
+        button.pack()
+        self.root.protocol("WM_DELETE_WINDOW", on_closing)
 
-        ttk.Label(my_frame, text="3 Man:").grid(row=3, column=0)
-        self.man3_string = tk.StringVar()
-        ttk.Entry(my_frame, textvariable=self.man3_string).grid(row=3,
-                                                                      column=1)
-
-        ttk.Label(my_frame, text="4 Man:").grid(row=4, column=0)
-        self.man4_string = tk.StringVar()
-        ttk.Entry(my_frame,
-                  textvariable=self.man4_string).grid(row=4,
-                                                                    column=1)
-
-        ttk.Label(my_frame, text="5 Man:").grid(row=5, column=0)
-        self.man5_string = tk.StringVar()
-        ttk.Entry(my_frame,
-                  textvariable=self.man5_string).grid(row=5,
-                                                                    column=1)
-
-        ttk.Label(my_frame, text="6 Man:").grid(row=6, column=0)
-        self.man6_string = tk.StringVar()
-        ttk.Entry(my_frame,
-                  textvariable=self.man6_string).grid(row=6,
-                                                                    column=1)
-
-        ttk.Label(my_frame, text="7 Man:").grid(row=7, column=0)
-        self.man7_string = tk.StringVar()
-        ttk.Entry(my_frame,
-                  textvariable=self.man7_string).grid(row=7,
-                                                                    column=1)
-        ttk.Label(my_frame, text="8 Man:").grid(row=8, column=0)
-        self.man8_string = tk.StringVar()
-        ttk.Entry(my_frame,
-                  textvariable=self.man8_string).grid(row=8,
-                                                                    column=1)
-        ttk.Label(my_frame, text="9 Man:").grid(row=9, column=0)
-        self.man9_string = tk.StringVar()
-        ttk.Entry(my_frame,
-                  textvariable=self.man9_string).grid(row=9,
-                                                                    column=1)
-
-        ttk.Button(my_frame, text="Next", command=input_so).grid(row=10,
-                                                                 column=0)
         self.root.mainloop()
 
-        global man_saved
-        if man_saved:
+        if is_checked and three_players_selected:
             self.root = tk.Tk()
             self.root.title("Mahjong Assisting Program")
             my_frame = ttk.Frame(self.root, padding=50)
             my_frame.grid()
 
-            ttk.Label(my_frame, text="How many Sos in hand?").grid(row=0, column=0)
+            ttk.Label(my_frame, text="How many Mans in hand?").grid(row=0, column=0)
 
-            ttk.Label(my_frame, text="1 So:").grid(row=1, column=0)
-            self.so1_string = tk.StringVar()
+            ttk.Label(my_frame, text="1 Man:").grid(row=1, column=0)
+            self.man1_string = tk.StringVar()
             ttk.Entry(my_frame,
-                    textvariable=self.so1_string).grid(row=1,
+                    textvariable=self.man1_string).grid(row=1,
                                                                     column=1)
-
-            ttk.Label(my_frame, text="2 So:").grid(row=2, column=0)
-            self.so2_string = tk.StringVar()
+            ttk.Label(my_frame, text="9 Man:").grid(row=2, column=0)
+            self.man9_string = tk.StringVar()
             ttk.Entry(my_frame,
-                    textvariable=self.so2_string).grid(row=2,
-                                                                    column=1)
-
-            ttk.Label(my_frame, text="3 So:").grid(row=3, column=0)
-            self.so3_string = tk.StringVar()
-            ttk.Entry(my_frame, textvariable=self.so3_string).grid(row=3,
+                    textvariable=self.man9_string).grid(row=2,
                                                                         column=1)
 
-            ttk.Label(my_frame, text="4 So:").grid(row=4, column=0)
-            self.so4_string = tk.StringVar()
-            ttk.Entry(my_frame,
-                    textvariable=self.so4_string).grid(row=4,
-                                                                        column=1)
-
-            ttk.Label(my_frame, text="5 So:").grid(row=5, column=0)
-            self.so5_string = tk.StringVar()
-            ttk.Entry(my_frame,
-                    textvariable=self.so5_string).grid(row=5,
-                                                                        column=1)
-
-            ttk.Label(my_frame, text="6 So:").grid(row=6, column=0)
-            self.so6_string = tk.StringVar()
-            ttk.Entry(my_frame,
-                    textvariable=self.so6_string).grid(row=6,
-                                                                        column=1)
-
-            ttk.Label(my_frame, text="7 So:").grid(row=7, column=0)
-            self.so7_string = tk.StringVar()
-            ttk.Entry(my_frame,
-                    textvariable=self.so7_string).grid(row=7,
-                                                                        column=1)
-            ttk.Label(my_frame, text="8 So:").grid(row=8, column=0)
-            self.so8_string = tk.StringVar()
-            ttk.Entry(my_frame,
-                    textvariable=self.so8_string).grid(row=8,
-                                                                        column=1)
-            ttk.Label(my_frame, text="9 So:").grid(row=9, column=0)
-            self.so9_string = tk.StringVar()
-            ttk.Entry(my_frame,
-                    textvariable=self.so9_string).grid(row=9,
-                                                                        column=1)
-
-            ttk.Button(my_frame, text="Next", command=input_pin).grid(row=10,
+            ttk.Button(my_frame, text="Next", command=input_so).grid(row=3,
                                                                     column=0)
+            self.root.protocol("WM_DELETE_WINDOW", on_closing)
             self.root.mainloop()
             
-            global so_saved
-            if so_saved:
+            global man_saved
+            if man_saved:
                 self.root = tk.Tk()
                 self.root.title("Mahjong Assisting Program")
                 my_frame = ttk.Frame(self.root, padding=50)
                 my_frame.grid()
 
-                ttk.Label(my_frame, text="How many Pins in hand?").grid(row=0, column=0)
+                ttk.Label(my_frame, text="How many Sos in hand?").grid(row=0, column=0)
 
-                ttk.Label(my_frame, text="1 Pin:").grid(row=1, column=0)
-                self.pin1_string = tk.StringVar()
+                ttk.Label(my_frame, text="1 So:").grid(row=1, column=0)
+                self.so1_string = tk.StringVar()
                 ttk.Entry(my_frame,
-                        textvariable=self.pin1_string).grid(row=1,
+                        textvariable=self.so1_string).grid(row=1,
                                                                         column=1)
 
-                ttk.Label(my_frame, text="2 Pin:").grid(row=2, column=0)
-                self.pin2_string = tk.StringVar()
+                ttk.Label(my_frame, text="2 So:").grid(row=2, column=0)
+                self.so2_string = tk.StringVar()
                 ttk.Entry(my_frame,
-                        textvariable=self.pin2_string).grid(row=2,
+                        textvariable=self.so2_string).grid(row=2,
                                                                         column=1)
 
-                ttk.Label(my_frame, text="3 Pin:").grid(row=3, column=0)
-                self.pin3_string = tk.StringVar()
-                ttk.Entry(my_frame, textvariable=self.pin3_string).grid(row=3,
+                ttk.Label(my_frame, text="3 So:").grid(row=3, column=0)
+                self.so3_string = tk.StringVar()
+                ttk.Entry(my_frame, textvariable=self.so3_string).grid(row=3,
                                                                             column=1)
 
-                ttk.Label(my_frame, text="4 Pin:").grid(row=4, column=0)
-                self.pin4_string = tk.StringVar()
+                ttk.Label(my_frame, text="4 So:").grid(row=4, column=0)
+                self.so4_string = tk.StringVar()
                 ttk.Entry(my_frame,
-                        textvariable=self.pin4_string).grid(row=4,
+                        textvariable=self.so4_string).grid(row=4,
                                                                             column=1)
 
-                ttk.Label(my_frame, text="5 Pin:").grid(row=5, column=0)
-                self.pin5_string = tk.StringVar()
+                ttk.Label(my_frame, text="5 So:").grid(row=5, column=0)
+                self.so5_string = tk.StringVar()
                 ttk.Entry(my_frame,
-                        textvariable=self.pin5_string).grid(row=5,
+                        textvariable=self.so5_string).grid(row=5,
                                                                             column=1)
 
-                ttk.Label(my_frame, text="6 Pin:").grid(row=6, column=0)
-                self.pin6_string = tk.StringVar()
+                ttk.Label(my_frame, text="6 So:").grid(row=6, column=0)
+                self.so6_string = tk.StringVar()
                 ttk.Entry(my_frame,
-                        textvariable=self.pin6_string).grid(row=6,
+                        textvariable=self.so6_string).grid(row=6,
                                                                             column=1)
 
-                ttk.Label(my_frame, text="7 Pin:").grid(row=7, column=0)
-                self.pin7_string = tk.StringVar()
+                ttk.Label(my_frame, text="7 So:").grid(row=7, column=0)
+                self.so7_string = tk.StringVar()
                 ttk.Entry(my_frame,
-                        textvariable=self.pin7_string).grid(row=7,
+                        textvariable=self.so7_string).grid(row=7,
                                                                             column=1)
-                ttk.Label(my_frame, text="8 Pin:").grid(row=8, column=0)
-                self.pin8_string = tk.StringVar()
+                ttk.Label(my_frame, text="8 So:").grid(row=8, column=0)
+                self.so8_string = tk.StringVar()
                 ttk.Entry(my_frame,
-                        textvariable=self.pin8_string).grid(row=8,
+                        textvariable=self.so8_string).grid(row=8,
                                                                             column=1)
-                ttk.Label(my_frame, text="9 Pin:").grid(row=9, column=0)
-                self.pin9_string = tk.StringVar()
+                ttk.Label(my_frame, text="9 So:").grid(row=9, column=0)
+                self.so9_string = tk.StringVar()
                 ttk.Entry(my_frame,
-                        textvariable=self.pin9_string).grid(row=9,
+                        textvariable=self.so9_string).grid(row=9,
                                                                             column=1)
 
-                ttk.Button(my_frame, text="Next", command=input_windtiles).grid(row=10,
+                ttk.Button(my_frame, text="Next", command=input_pin).grid(row=10,
                                                                         column=0)
-
+                self.root.protocol("WM_DELETE_WINDOW", on_closing)
                 self.root.mainloop()
-
-                global pin_saved
-                if pin_saved:
+                
+                global so_saved
+                if so_saved:
                     self.root = tk.Tk()
                     self.root.title("Mahjong Assisting Program")
                     my_frame = ttk.Frame(self.root, padding=50)
                     my_frame.grid()
 
-                    ttk.Label(my_frame, text="How many wind tiles in hand?").grid(row=0, column=0)
+                    ttk.Label(my_frame, text="How many Pins in hand?").grid(row=0, column=0)
 
-                    ttk.Label(my_frame, text="East Wind:").grid(row=1, column=0)
-                    self.east_string = tk.StringVar()
+                    ttk.Label(my_frame, text="1 Pin:").grid(row=1, column=0)
+                    self.pin1_string = tk.StringVar()
                     ttk.Entry(my_frame,
-                            textvariable=self.east_string).grid(row=1,
+                            textvariable=self.pin1_string).grid(row=1,
                                                                             column=1)
 
-                    ttk.Label(my_frame, text="South Wind:").grid(row=2, column=0)
-                    self.south_string = tk.StringVar()
+                    ttk.Label(my_frame, text="2 Pin:").grid(row=2, column=0)
+                    self.pin2_string = tk.StringVar()
                     ttk.Entry(my_frame,
-                            textvariable=self.south_string).grid(row=2,
+                            textvariable=self.pin2_string).grid(row=2,
                                                                             column=1)
 
-                    ttk.Label(my_frame, text="West Wind:").grid(row=3, column=0)
-                    self.west_string = tk.StringVar()
-                    ttk.Entry(my_frame, textvariable=self.west_string).grid(row=3,
+                    ttk.Label(my_frame, text="3 Pin:").grid(row=3, column=0)
+                    self.pin3_string = tk.StringVar()
+                    ttk.Entry(my_frame, textvariable=self.pin3_string).grid(row=3,
                                                                                 column=1)
 
-                    ttk.Label(my_frame, text="North Wind:").grid(row=4, column=0)
-                    self.north_string = tk.StringVar()
+                    ttk.Label(my_frame, text="4 Pin:").grid(row=4, column=0)
+                    self.pin4_string = tk.StringVar()
                     ttk.Entry(my_frame,
-                            textvariable=self.north_string).grid(row=4,
+                            textvariable=self.pin4_string).grid(row=4,
                                                                                 column=1)
-                    ttk.Button(my_frame, text="Next", command=input_Dragontiles).grid(row=5,
-                                                                        column=0)
+
+                    ttk.Label(my_frame, text="5 Pin:").grid(row=5, column=0)
+                    self.pin5_string = tk.StringVar()
+                    ttk.Entry(my_frame,
+                            textvariable=self.pin5_string).grid(row=5,
+                                                                                column=1)
+
+                    ttk.Label(my_frame, text="6 Pin:").grid(row=6, column=0)
+                    self.pin6_string = tk.StringVar()
+                    ttk.Entry(my_frame,
+                            textvariable=self.pin6_string).grid(row=6,
+                                                                                column=1)
+
+                    ttk.Label(my_frame, text="7 Pin:").grid(row=7, column=0)
+                    self.pin7_string = tk.StringVar()
+                    ttk.Entry(my_frame,
+                            textvariable=self.pin7_string).grid(row=7,
+                                                                                column=1)
+                    ttk.Label(my_frame, text="8 Pin:").grid(row=8, column=0)
+                    self.pin8_string = tk.StringVar()
+                    ttk.Entry(my_frame,
+                            textvariable=self.pin8_string).grid(row=8,
+                                                                                column=1)
+                    ttk.Label(my_frame, text="9 Pin:").grid(row=9, column=0)
+                    self.pin9_string = tk.StringVar()
+                    ttk.Entry(my_frame,
+                            textvariable=self.pin9_string).grid(row=9,
+                                                                                column=1)
+
+                    ttk.Button(my_frame, text="Next", command=input_windtiles).grid(row=10,
+                                                                            column=0)
+                    self.root.protocol("WM_DELETE_WINDOW", on_closing)
                     self.root.mainloop()
 
-                    global wind_saved
-                    if wind_saved:
+                    global pin_saved
+                    if pin_saved:
                         self.root = tk.Tk()
                         self.root.title("Mahjong Assisting Program")
                         my_frame = ttk.Frame(self.root, padding=50)
                         my_frame.grid()
 
-                        ttk.Label(my_frame, text="How many Dragon tiles in hand?").grid(row=0, column=0)
+                        ttk.Label(my_frame, text="How many wind tiles in hand?").grid(row=0, column=0)
 
-                        ttk.Label(my_frame, text="White:").grid(row=2, column=0)
-                        self.white_string = tk.StringVar()
+                        ttk.Label(my_frame, text="East Wind:").grid(row=1, column=0)
+                        self.east_string = tk.StringVar()
                         ttk.Entry(my_frame,
-                                textvariable=self.white_string).grid(row=2,
+                                textvariable=self.east_string).grid(row=1,
                                                                                 column=1)
 
-                        ttk.Label(my_frame, text="Green:").grid(row=3, column=0)
-                        self.green_string = tk.StringVar()
+                        ttk.Label(my_frame, text="South Wind:").grid(row=2, column=0)
+                        self.south_string = tk.StringVar()
                         ttk.Entry(my_frame,
-                                textvariable=self.green_string).grid(row=3,
+                                textvariable=self.south_string).grid(row=2,
                                                                                 column=1)
 
-                        ttk.Label(my_frame, text="Red:").grid(row=1, column=0)
-                        self.red_string = tk.StringVar()
-                        ttk.Entry(my_frame, textvariable=self.red_string).grid(row=1,
+                        ttk.Label(my_frame, text="West Wind:").grid(row=3, column=0)
+                        self.west_string = tk.StringVar()
+                        ttk.Entry(my_frame, textvariable=self.west_string).grid(row=3,
                                                                                     column=1)
 
-                        ttk.Button(my_frame, text="Save", command=on_start).grid(row=4,
+                        ttk.Label(my_frame, text="North Wind:").grid(row=4, column=0)
+                        self.north_string = tk.StringVar()
+                        ttk.Entry(my_frame,
+                                textvariable=self.north_string).grid(row=4,
+                                                                                    column=1)
+                        ttk.Button(my_frame, text="Next", command=input_Dragontiles).grid(row=5,
                                                                             column=0)
+                        self.root.protocol("WM_DELETE_WINDOW", on_closing)
                         self.root.mainloop()
 
-        hand_to_check = man_list + so_list + pin_list + wind_list + dragon_list
-        print(len(hand_to_check))
+                        global wind_saved
+                        if wind_saved:
+                            self.root = tk.Tk()
+                            self.root.title("Mahjong Assisting Program")
+                            my_frame = ttk.Frame(self.root, padding=50)
+                            my_frame.grid()
 
-        if sum(hand_to_check) != 14:
-            tkbox.showerror("Tile number error", "The total number of tiles in hand should be 14.")
+                            ttk.Label(my_frame, text="How many Dragon tiles in hand?").grid(row=0, column=0)
+
+                            ttk.Label(my_frame, text="White:").grid(row=2, column=0)
+                            self.white_string = tk.StringVar()
+                            ttk.Entry(my_frame,
+                                    textvariable=self.white_string).grid(row=2,
+                                                                                    column=1)
+
+                            ttk.Label(my_frame, text="Green:").grid(row=3, column=0)
+                            self.green_string = tk.StringVar()
+                            ttk.Entry(my_frame,
+                                    textvariable=self.green_string).grid(row=3,
+                                                                                    column=1)
+
+                            ttk.Label(my_frame, text="Red:").grid(row=1, column=0)
+                            self.red_string = tk.StringVar()
+                            ttk.Entry(my_frame, textvariable=self.red_string).grid(row=1,
+                                                                                        column=1)
+
+                            ttk.Button(my_frame, text="Save", command=on_start).grid(row=4,
+                                                                                column=0)
+                            self.root.protocol("WM_DELETE_WINDOW", on_closing)
+                            self.root.mainloop()
+
+            hand_to_check_number = sum(man_list) + sum(so_list) + sum(pin_list) + sum(wind_list) + sum(dragon_list)
+            # print(hand_to_check)
+            hand_to_check = man_list + pin_list + wind_list + so_list + dragon_list
+
+
+            if hand_to_check_number != 14:
+                tkbox.showerror("Tile number error", "The total number of tiles in hand should be 14.")
+                man_saved = False
+                so_saved = False
+                pin_saved = False
+                wind_saved = False
+                global dragon_saved
+                dragon_saved = False
+
+                self.run_hand_to_check()
+
             man_saved = False
             so_saved = False
             pin_saved = False
             wind_saved = False
-            global dragon_saved
             dragon_saved = False
 
-            self.run_hand_to_check()
+            return hand_to_check
 
-        man_saved = False
-        so_saved = False
-        pin_saved = False
-        wind_saved = False
-        dragon_saved = False
+            
+        if is_checked and four_players_selected:
+            self.root = tk.Tk()
+            self.root.title("Mahjong Assisting Program")
+            my_frame = ttk.Frame(self.root, padding=50)
+            my_frame.grid()
 
-        return hand_to_check
+            ttk.Label(my_frame, text="How many Mans in hand?").grid(row=0, column=0)
+
+            ttk.Label(my_frame, text="1 Man:").grid(row=1, column=0)
+            self.man1_string = tk.StringVar()
+            ttk.Entry(my_frame,
+                    textvariable=self.man1_string).grid(row=1,
+                                                                    column=1)
+
+            ttk.Label(my_frame, text="2 Man:").grid(row=2, column=0)
+            self.man2_string = tk.StringVar()
+            ttk.Entry(my_frame,
+                    textvariable=self.man2_string).grid(row=2,
+                                                                    column=1)
+
+            ttk.Label(my_frame, text="3 Man:").grid(row=3, column=0)
+            self.man3_string = tk.StringVar()
+            ttk.Entry(my_frame, textvariable=self.man3_string).grid(row=3,
+                                                                        column=1)
+
+            ttk.Label(my_frame, text="4 Man:").grid(row=4, column=0)
+            self.man4_string = tk.StringVar()
+            ttk.Entry(my_frame,
+                    textvariable=self.man4_string).grid(row=4,
+                                                                        column=1)
+
+            ttk.Label(my_frame, text="5 Man:").grid(row=5, column=0)
+            self.man5_string = tk.StringVar()
+            ttk.Entry(my_frame,
+                    textvariable=self.man5_string).grid(row=5,
+                                                                        column=1)
+
+            ttk.Label(my_frame, text="6 Man:").grid(row=6, column=0)
+            self.man6_string = tk.StringVar()
+            ttk.Entry(my_frame,
+                    textvariable=self.man6_string).grid(row=6,
+                                                                        column=1)
+
+            ttk.Label(my_frame, text="7 Man:").grid(row=7, column=0)
+            self.man7_string = tk.StringVar()
+            ttk.Entry(my_frame,
+                    textvariable=self.man7_string).grid(row=7,
+                                                                        column=1)
+            ttk.Label(my_frame, text="8 Man:").grid(row=8, column=0)
+            self.man8_string = tk.StringVar()
+            ttk.Entry(my_frame,
+                    textvariable=self.man8_string).grid(row=8,
+                                                                        column=1)
+            ttk.Label(my_frame, text="9 Man:").grid(row=9, column=0)
+            self.man9_string = tk.StringVar()
+            ttk.Entry(my_frame,
+                    textvariable=self.man9_string).grid(row=9,
+                                                                        column=1)
+
+            ttk.Button(my_frame, text="Next", command=input_so).grid(row=10,
+                                                                    column=0)
+            self.root.protocol("WM_DELETE_WINDOW", on_closing)
+            self.root.mainloop()
+            
+            if man_saved:
+                self.root = tk.Tk()
+                self.root.title("Mahjong Assisting Program")
+                my_frame = ttk.Frame(self.root, padding=50)
+                my_frame.grid()
+
+                ttk.Label(my_frame, text="How many Sos in hand?").grid(row=0, column=0)
+
+                ttk.Label(my_frame, text="1 So:").grid(row=1, column=0)
+                self.so1_string = tk.StringVar()
+                ttk.Entry(my_frame,
+                        textvariable=self.so1_string).grid(row=1,
+                                                                        column=1)
+
+                ttk.Label(my_frame, text="2 So:").grid(row=2, column=0)
+                self.so2_string = tk.StringVar()
+                ttk.Entry(my_frame,
+                        textvariable=self.so2_string).grid(row=2,
+                                                                        column=1)
+
+                ttk.Label(my_frame, text="3 So:").grid(row=3, column=0)
+                self.so3_string = tk.StringVar()
+                ttk.Entry(my_frame, textvariable=self.so3_string).grid(row=3,
+                                                                            column=1)
+
+                ttk.Label(my_frame, text="4 So:").grid(row=4, column=0)
+                self.so4_string = tk.StringVar()
+                ttk.Entry(my_frame,
+                        textvariable=self.so4_string).grid(row=4,
+                                                                            column=1)
+
+                ttk.Label(my_frame, text="5 So:").grid(row=5, column=0)
+                self.so5_string = tk.StringVar()
+                ttk.Entry(my_frame,
+                        textvariable=self.so5_string).grid(row=5,
+                                                                            column=1)
+
+                ttk.Label(my_frame, text="6 So:").grid(row=6, column=0)
+                self.so6_string = tk.StringVar()
+                ttk.Entry(my_frame,
+                        textvariable=self.so6_string).grid(row=6,
+                                                                            column=1)
+
+                ttk.Label(my_frame, text="7 So:").grid(row=7, column=0)
+                self.so7_string = tk.StringVar()
+                ttk.Entry(my_frame,
+                        textvariable=self.so7_string).grid(row=7,
+                                                                            column=1)
+                ttk.Label(my_frame, text="8 So:").grid(row=8, column=0)
+                self.so8_string = tk.StringVar()
+                ttk.Entry(my_frame,
+                        textvariable=self.so8_string).grid(row=8,
+                                                                            column=1)
+                ttk.Label(my_frame, text="9 So:").grid(row=9, column=0)
+                self.so9_string = tk.StringVar()
+                ttk.Entry(my_frame,
+                        textvariable=self.so9_string).grid(row=9,
+                                                                            column=1)
+
+                ttk.Button(my_frame, text="Next", command=input_pin).grid(row=10,
+                                                                        column=0)
+                self.root.protocol("WM_DELETE_WINDOW", on_closing)
+                self.root.mainloop()
+
+
+                if so_saved:
+                    self.root = tk.Tk()
+                    self.root.title("Mahjong Assisting Program")
+                    my_frame = ttk.Frame(self.root, padding=50)
+                    my_frame.grid()
+
+                    ttk.Label(my_frame, text="How many Pins in hand?").grid(row=0, column=0)
+
+                    ttk.Label(my_frame, text="1 Pin:").grid(row=1, column=0)
+                    self.pin1_string = tk.StringVar()
+                    ttk.Entry(my_frame,
+                            textvariable=self.pin1_string).grid(row=1,
+                                                                            column=1)
+
+                    ttk.Label(my_frame, text="2 Pin:").grid(row=2, column=0)
+                    self.pin2_string = tk.StringVar()
+                    ttk.Entry(my_frame,
+                            textvariable=self.pin2_string).grid(row=2,
+                                                                            column=1)
+
+                    ttk.Label(my_frame, text="3 Pin:").grid(row=3, column=0)
+                    self.pin3_string = tk.StringVar()
+                    ttk.Entry(my_frame, textvariable=self.pin3_string).grid(row=3,
+                                                                                column=1)
+
+                    ttk.Label(my_frame, text="4 Pin:").grid(row=4, column=0)
+                    self.pin4_string = tk.StringVar()
+                    ttk.Entry(my_frame,
+                            textvariable=self.pin4_string).grid(row=4,
+                                                                                column=1)
+
+                    ttk.Label(my_frame, text="5 Pin:").grid(row=5, column=0)
+                    self.pin5_string = tk.StringVar()
+                    ttk.Entry(my_frame,
+                            textvariable=self.pin5_string).grid(row=5,
+                                                                                column=1)
+
+                    ttk.Label(my_frame, text="6 Pin:").grid(row=6, column=0)
+                    self.pin6_string = tk.StringVar()
+                    ttk.Entry(my_frame,
+                            textvariable=self.pin6_string).grid(row=6,
+                                                                                column=1)
+
+                    ttk.Label(my_frame, text="7 Pin:").grid(row=7, column=0)
+                    self.pin7_string = tk.StringVar()
+                    ttk.Entry(my_frame,
+                            textvariable=self.pin7_string).grid(row=7,
+                                                                                column=1)
+                    ttk.Label(my_frame, text="8 Pin:").grid(row=8, column=0)
+                    self.pin8_string = tk.StringVar()
+                    ttk.Entry(my_frame,
+                            textvariable=self.pin8_string).grid(row=8,
+                                                                                column=1)
+                    ttk.Label(my_frame, text="9 Pin:").grid(row=9, column=0)
+                    self.pin9_string = tk.StringVar()
+                    ttk.Entry(my_frame,
+                            textvariable=self.pin9_string).grid(row=9,
+                                                                                column=1)
+
+                    ttk.Button(my_frame, text="Next", command=input_windtiles).grid(row=10,
+                                                                            column=0)
+
+                    self.root.protocol("WM_DELETE_WINDOW", on_closing)
+                    self.root.mainloop()
+
+                    if pin_saved:
+                        self.root = tk.Tk()
+                        self.root.title("Mahjong Assisting Program")
+                        my_frame = ttk.Frame(self.root, padding=50)
+                        my_frame.grid()
+
+                        ttk.Label(my_frame, text="How many wind tiles in hand?").grid(row=0, column=0)
+
+                        ttk.Label(my_frame, text="East Wind:").grid(row=1, column=0)
+                        self.east_string = tk.StringVar()
+                        ttk.Entry(my_frame,
+                                textvariable=self.east_string).grid(row=1,
+                                                                                column=1)
+
+                        ttk.Label(my_frame, text="South Wind:").grid(row=2, column=0)
+                        self.south_string = tk.StringVar()
+                        ttk.Entry(my_frame,
+                                textvariable=self.south_string).grid(row=2,
+                                                                                column=1)
+
+                        ttk.Label(my_frame, text="West Wind:").grid(row=3, column=0)
+                        self.west_string = tk.StringVar()
+                        ttk.Entry(my_frame, textvariable=self.west_string).grid(row=3,
+                                                                                    column=1)
+
+                        ttk.Label(my_frame, text="North Wind:").grid(row=4, column=0)
+                        self.north_string = tk.StringVar()
+                        ttk.Entry(my_frame,
+                                textvariable=self.north_string).grid(row=4,
+                                                                                    column=1)
+                        ttk.Button(my_frame, text="Next", command=input_Dragontiles).grid(row=5,
+                                                                            column=0)
+                        self.root.protocol("WM_DELETE_WINDOW", on_closing)
+                        self.root.mainloop()
+
+                        if wind_saved:
+                            self.root = tk.Tk()
+                            self.root.title("Mahjong Assisting Program")
+                            my_frame = ttk.Frame(self.root, padding=50)
+                            my_frame.grid()
+
+                            ttk.Label(my_frame, text="How many Dragon tiles in hand?").grid(row=0, column=0)
+
+                            ttk.Label(my_frame, text="White:").grid(row=2, column=0)
+                            self.white_string = tk.StringVar()
+                            ttk.Entry(my_frame,
+                                    textvariable=self.white_string).grid(row=2,
+                                                                                    column=1)
+
+                            ttk.Label(my_frame, text="Green:").grid(row=3, column=0)
+                            self.green_string = tk.StringVar()
+                            ttk.Entry(my_frame,
+                                    textvariable=self.green_string).grid(row=3,
+                                                                                    column=1)
+
+                            ttk.Label(my_frame, text="Red:").grid(row=1, column=0)
+                            self.red_string = tk.StringVar()
+                            ttk.Entry(my_frame, textvariable=self.red_string).grid(row=1,
+                                                                                        column=1)
+
+                            ttk.Button(my_frame, text="Save", command=on_start).grid(row=4,
+                                                                                column=0)
+                            self.root.protocol("WM_DELETE_WINDOW", on_closing)
+                            self.root.mainloop()
+
+            hand_to_check = man_list + so_list + pin_list + wind_list + dragon_list
+            # print(len(hand_to_check))
+
+            if sum(hand_to_check) != 14:
+                tkbox.showerror("Tile number error", "The total number of tiles in hand should be 14.")
+                man_saved = False
+                so_saved = False
+                pin_saved = False
+                wind_saved = False
+                dragon_saved = False
+
+                self.run_hand_to_check()
+
+            man_saved = False
+            so_saved = False
+            pin_saved = False
+            wind_saved = False
+            dragon_saved = False
+
+            return hand_to_check
 
     def run_tiles_on_table(self):
         """
@@ -727,12 +1057,12 @@ class App:
                         self.root.mainloop()
 
         hand_on_table = man_list + so_list + pin_list + wind_list + dragon_list
-        print(len(hand_on_table))
+        # print(len(hand_on_table))
 
         return hand_on_table
 
 
-if __name__ == "__main__":
-    app = App()
-    app.run_hand_to_check()
-    app.run_tiles_on_table()
+
+app = App()
+hand_to_check = app.run_hand_to_check()
+tiles_on_table = app.run_tiles_on_table()

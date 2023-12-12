@@ -48,7 +48,7 @@ def input_so():
                         raise ValueError
 
                 man_list = [0, man1, 0, 0, 0, 0, 0, 0, 0, man9]
-                print(man_list)
+                # print(man_list)
                 app.root.destroy()
             except ValueError:
                 tkbox.showerror("Too Big or Too Small",
@@ -78,7 +78,7 @@ def input_so():
 
 
                 man_list = [0, man1, man2, man3, man4, man5, man6, man7, man8, man9]
-                print(man_list)
+                # print(man_list)
                 app.root.destroy()
             except ValueError:
                 tkbox.showerror("Too Big or Too Small",
@@ -113,7 +113,7 @@ def input_pin():
             
             global so_list
             so_list = [0, so1, so2, so3, so4, so5, so6, so7, so8, so9]
-            print(so_list)
+            # print(so_list)
             app.root.destroy()
         except ValueError:
             tkbox.showerror("Too Big or Too Small",
@@ -148,7 +148,7 @@ def input_windtiles():
                     raise ValueError
             global pin_list
             pin_list = [0, pin1, pin2, pin3, pin4, pin5, pin6, pin7, pin8, pin9]
-            print(pin_list)
+            # print(pin_list)
             app.root.destroy()
         except ValueError:
             tkbox.showerror("Too Big or Too Small",
@@ -174,7 +174,7 @@ def input_Dragontiles():
                     raise ValueError
             global wind_list
             wind_list = [0, east, south, west, north]
-            print(wind_list)
+            # print(wind_list)
             app.root.destroy()
         except ValueError:
                     tkbox.showerror("Too Big or Too Small",
@@ -197,7 +197,7 @@ def on_start():
                     raise ValueError
             global dragon_list
             dragon_list = [red, green, white]
-            print(dragon_list)
+            # print(dragon_list)
             app.root.destroy()
         except ValueError:
             tkbox.showerror("Too Big or Too Small",
@@ -491,10 +491,12 @@ class App:
                             self.root.protocol("WM_DELETE_WINDOW", on_closing)
                             self.root.mainloop()
 
-            hand_to_check = sum(man_list) + sum(so_list) + sum(pin_list) + sum(wind_list) + sum(dragon_list)
-            print(hand_to_check)
+            hand_to_check_number = sum(man_list) + sum(so_list) + sum(pin_list) + sum(wind_list) + sum(dragon_list)
+            # print(hand_to_check)
+            hand_to_check = man_list + pin_list + wind_list + so_list + dragon_list
 
-            if hand_to_check != 14:
+
+            if hand_to_check_number != 14:
                 tkbox.showerror("Tile number error", "The total number of tiles in hand should be 14.")
                 man_saved = False
                 so_saved = False
@@ -774,7 +776,7 @@ class App:
                             self.root.mainloop()
 
             hand_to_check = man_list + so_list + pin_list + wind_list + dragon_list
-            print(len(hand_to_check))
+            # print(len(hand_to_check))
 
             if sum(hand_to_check) != 14:
                 tkbox.showerror("Tile number error", "The total number of tiles in hand should be 14.")
@@ -1055,12 +1057,12 @@ class App:
                         self.root.mainloop()
 
         hand_on_table = man_list + so_list + pin_list + wind_list + dragon_list
-        print(len(hand_on_table))
+        # print(len(hand_on_table))
 
         return hand_on_table
 
 
-if __name__ == "__main__":
-    app = App()
-    app.run_hand_to_check()
-    app.run_tiles_on_table()
+
+app = App()
+hand_to_check = app.run_hand_to_check()
+tiles_on_table = app.run_tiles_on_table()

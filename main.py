@@ -1,6 +1,4 @@
-import input_validation
-import shanten_calculator
-import ukerie_calculator
+
 import output_visuals
 import configuration
 
@@ -30,6 +28,6 @@ for i in range(1, len(value_tiles_dic)):
 
 
 # shanten calculation result
-minimun_shanten = shanten_calculator.calculateMinimumShanten(hand_to_check)
+minimun_shanten = configuration.minimun_shanten
 
 output_visuals.get_values(value_tiles_dic)

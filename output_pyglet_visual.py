@@ -2,13 +2,11 @@
 display the result using tkinter
 """
 
-from ukerie_calculator import result_dict
+from configuration import value_tiles_dic
 import pyglet
 
 # global
-window = pyglet.window.Window(resizable=True)
-print("window.width ",window.width)
-print("window.height ",window.height)
+window = pyglet.window.Window(resizable=True, visible = False)
 bgimage_path = "tileImages/mahjongbg.jpg"
 bgimage = pyglet.image.load(bgimage_path)
 bg_sprite = pyglet.sprite.Sprite(bgimage)
@@ -16,6 +14,7 @@ batch = pyglet.graphics.Batch()
 imageWidth = 35
 imageHeight = 55
 img_list = []
+result_dict = value_tiles_dic
 
 text_label = pyglet.text.Label(
     "Tiles to discard:",
@@ -48,25 +47,27 @@ tiles_name_dict = {1:"1 Man", 2:"2 Man", 3:"3 Man", 4:"4 Man", 5:"5 Man", 6:"6 M
 
 
 # find the max value from dict
-values_list = []
-for item in result_dict.values():
-    values_list.append(item["value"])  
-max_value = max(values_list)
+max_value = 0
+
+for i in range(1, len(result_dict)):
+    if result_dict[i]["value"] >= max_value:
+        max_value = result_dict[i]["value"]
+
+# Find all keys with the maximum "value"
+keys_with_max_value = []
+tiles = []
+for i in range(1, len(result_dict)):
+    if result_dict[i]["value"] == max_value:
+        keys_with_max_value.append(i)
+        tiles.append(result_dict[i]["tiles"])
 
 text_label_4 = pyglet.text.Label(
-    f"{max(values_list)}",
+    f"{max_value}",
     font_name="Times New Roman",
     font_size=18,
     x=400, y=500,
     anchor_x="left", anchor_y="baseline"
 )
-
-# Find all keys with the maximum "value"
-keys_with_max_value = []
-for key, val in result_dict.items():
-    if val["value"] == max_value:
-        keys_with_max_value.append(key)
-
 
 
 def display_max_val_tile_img():
@@ -95,8 +96,6 @@ def display_tile():
             tile_img.height = imageHeight
             tile_x = window.width//2 + idx * tile_img.width
             tile_y = window.height//2 - i * tile_img.height
-            print("X", tile_x)
-            print("Y", tile_y)
             tile_sprite = pyglet.sprite.Sprite(img = tile_img, x = tile_x, y = tile_y, batch = batch)
             img_list.append(tile_sprite)
 
@@ -113,7 +112,19 @@ def on_draw():
     for sprite in img_list:
         sprite.draw()
     
+def main():
+    @window.event
+    def on_draw():
+        window.clear()
+        bg_sprite.draw()
+        text_label.draw()
+        text_label_2.draw()
+        text_label_3.draw()
+        text_label_4.draw()
+        for sprite in img_list:
+            sprite.draw()
 
-display_max_val_tile_img()
-display_tile()
-pyglet.app.run()
+    display_max_val_tile_img()
+    display_tile()
+    pyglet.app.run()
+
